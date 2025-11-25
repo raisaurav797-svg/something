@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For My Love ❤️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:'Poppins',sans-serif;
+      background:linear-gradient(135deg,#ff9a9e,#fecfef);
+      display:flex;justify-content:center;align-items:center;
+      height:100vh;padding:20px;
+    }
+
+    .card{
+      width:90%;max-width:600px;background:white;border-radius:20px;
+      padding:25px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.2);
+      position:relative;overflow:hidden;
+    }
+
+    h1{font-family:'Dancing Script',cursive;font-size:2.2rem;color:#b3205a;margin-bottom:10px}
+    p{color:#573142;margin-bottom:15px}
+
+    #message{
+      white-space:pre-wrap;
+      font-size:1.1rem;
+      min-height:80px;
+      color:#4a243b;
+    }
+
+    button,a{
+      padding:10px 16px;border:none;border-radius:10px;
+      cursor:pointer;margin:6px;font-weight:600;
+    }
+
+    #playBtn{background:#ff6b94;color:white}
+    #heartBtn{background:#ffd1dc;color:#6c1e3f}
+    #downloadBtn{
+      background:none;border:2px solid #6c1e3f;color:#6c1e3f;
+      text-decoration:none;display:inline-block
+    }
+
+    #confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+    .floating-heart{position:absolute;pointer-events:none}
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div id="confetti"></div>
+
+  <h1>For you Sani</h1>
+<img src="mars.jpg" alt="Mars Image" style="width:20%; margin-top:15px; border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.2);">
+
+
+  
+  <div id="message" data-text="
+
+I hope you like it topper miss.
+A liitle gift from me.
+"></div>
+  <button id="playBtn">Play Music ▶</button>
+  <button id="heartBtn">Send Hearts 💕</button>
+  <audio id="bgMusic" preload="auto">
+  <source src="just-the-way-you-are.mp3" type="audio/mpeg">
+</audio>
+<p style="margin-top:15px;font-weight:600;color:#b3205a">Would you be my beloved? ❤️</p>
+<button id="yesBtn" style="background:#ff6b94;color:white">Yes ✅</button>
+<button id="noBtn" style="background:#ffd1dc;color:#6c1e3f">No ❌</button>
+
+</div>
+
+<script>
+    // ✅ YES button shows mars.jpg image
+const yesBtn = document.getElementById("yesBtn");
+yesBtn.onclick = () => {
+  const smile = document.createElement("div");
+  smile.textContent = "😊";  // smile emoji
+  smile.style.fontSize = "4rem";
+  smile.style.marginTop = "15px";
+  document.querySelector('.card').appendChild(smile);
+
+  yesBtn.disabled = true;
+  document.getElementById("noBtn").disabled = true;
+
+  // Trigger hearts animation
+  document.getElementById("heartBtn").click();
+};
+
+
+// ✅ NO button sad emoji
+const noBtn=document.getElementById("noBtn");
+noBtn.onclick=()=>{
+const sad=document.createElement("div");
+sad.textContent="😢";
+sad.style.fontSize="4rem";
+sad.style.marginTop="15px";
+document.querySelector('.card').appendChild(sad);
+yesBtn.disabled=true;
+noBtn.disabled=true;
+};
+
+// ✅ Typewriter
+const msg=document.getElementById("message");
+const txt=msg.dataset.text;
+
+msg.textContent="";
+let i=0;
+(function type(){
+  if(i<txt.length){msg.textContent+=txt[i++];setTimeout(type,txt[i-1]=="\n"?120:25);}
+})();
+
+// ✅ Hearts
+const conf=document.getElementById("confetti");
+function heart(){
+  const h=document.createElement("div");h.className="floating-heart";
+  const size=Math.random()*20+20;
+  h.style.left=Math.random()*90+"%";
+  h.style.top="100%";
+  h.innerHTML=`<svg width="${size}" height="${size}" viewBox="0 0 32 29"><path fill="rgba(255,60,120,0.9)" d="M23.6 0c-2.6 0-4.6 1.6-5.6 3.2C16.9 1.6 14.9 0 12.3 0 6.6 0 2 4.6 2 10.3 2 19.6 16 29 16 29s14-9.4 14-18.7C30 4.6 25.4 0 23.6 0z"/></svg>`;
+  conf.appendChild(h);
+  h.animate([
+    {transform:"translateY(0) scale(1)",opacity:1},
+    {transform:"translateY(-120vh) scale(.8)",opacity:0}
+  ],{duration:4000});
+  setTimeout(()=>h.remove(),4000);
+}
+
+setInterval(()=>Math.random()>.7&&heart(),800);
+heartBtn.onclick=()=>{for(let i=0;i<15;i++)setTimeout(heart,i*70)};
+
+// ✅ Music
+const music=document.getElementById("bgMusic");
+playBtn.onclick=async()=>{
+  if(music.paused){
+    try{await music.play();playBtn.textContent="Pause ⏸";}catch{alert("Add your-music.mp3 to enable music");}
+  }else{music.pause();playBtn.textContent="Play ▶";}
+};
+
+// ✅ Download
+function makeFile(){
+  const blob=new Blob([txt],{type:"text/plain"});
+  downloadBtn.href=URL.createObjectURL(blob);
+}
+makeFile();
+downloadBtn.onclick=()=>setTimeout(()=>URL.revokeObjectURL(downloadBtn.href),10000);
+</script>
+</body>
+</html>
